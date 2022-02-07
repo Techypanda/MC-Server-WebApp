@@ -94,6 +94,11 @@
 					href="https://techytechster.com">My Website Contains My Socials</a
 				>)
 			</p>
+			<h2>Check Again</h2>
+			<p style="margin: 0;">{timePassed}s since last check</p>
+			<p class="angrycheck noselect" on:click={() => (promise = doWork())}>
+				CHECK AGAIN!
+			</p>
 			<h2>Server Health</h2>
 			<p style="margin: 0;">
 				You can see the server health via the <a href={NETDATA_URI}
