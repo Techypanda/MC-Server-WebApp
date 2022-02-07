@@ -2,7 +2,8 @@
 	import Loader from "./Loader.svelte";
 	import { serverData } from "./store";
 	export const API_URI = "https://api.mcsrvstat.us/2/";
-	export const SERVER_URI = "hypixel.net"; // Replace with mc.techytechster.com
+	export const SERVER_URI = "mc.techytechster.com"; // Replace with mc.techytechster.com
+	export const NETDATA_URI = "https://youranerd.com";
 	let apiResponse: ServerStatusResponse;
 	async function doWork() {
 		try {
@@ -14,7 +15,7 @@
 			console.error(err);
 		}
 	}
-	setInterval(() => promise = doWork(), 60000);
+	setInterval(() => (promise = doWork()), 60000);
 	let promise = doWork();
 	let timePassed = 0;
 	setInterval(() => timePassed++, 1000);
@@ -28,9 +29,55 @@
 	{#await promise}
 		<Loader />
 	{:then}
-		<div style="display: flex;">
+		{#if apiResponse.online}
+			<div style="display: flex;">
+				<div style="margin-right: 20px;">
+					<img src={apiResponse.icon} alt={apiResponse.hostname} />
+					<div id="status">
+						<div
+							id="statusDisplay"
+							class={apiResponse.online ? "online" : "offline"}
+						/>
+						<p id="statusText">
+							{apiResponse.online ? "Online" : "Offline"}
+						</p>
+					</div>
+				</div>
+				<div>
+					<p style="margin-bottom: 0">
+						Server IP Address 1 - {apiResponse.hostname}
+					</p>
+					<p style="margin-top: 0">
+						Server IP Address 2 - {apiResponse.ip}:{apiResponse.port}
+					</p>
+				</div>
+			</div>
+			<h2>Server MOTD</h2>
+			<div id="motd">
+				{#each apiResponse.motd.html as htmlString}
+					<p style="margin: 0;">{@html htmlString}</p>
+				{/each}
+			</div>
+			<h2>Modpack Details</h2>
+			<p style="margin: 0;">
+				This server uses <a
+					href="https://www.curseforge.com/minecraft/modpacks/valhelsia-3"
+					>'Valhesia 3 - v3.4.9'</a
+				>, you can get it from the curseforge launcher
+			</p>
+			<h2>Check Again</h2>
+			<p style="margin: 0;">{timePassed}s since last check</p>
+			<p class="angrycheck noselect" on:click={() => (promise = doWork())}>
+				CHECK AGAIN!
+			</p>
+			<h2>Server Health</h2>
+			<p style="margin: 0;">
+				You can see the server health via the <a href={NETDATA_URI}
+					>netdata here</a
+				>
+			</p>
+		{:else}
 			<div style="margin-right: 20px;">
-				<img src={apiResponse.icon} alt={apiResponse.hostname} />
 				<div id="status">
 					<div
 						id="statusDisplay"
@@ -41,28 +88,19 @@
 					</p>
 				</div>
 			</div>
-			<div>
-				<p style="margin-bottom: 0">
-					Server IP Address 1 - {apiResponse.hostname}
-				</p>
-				<p style="margin-top: 0">
-					Server IP Address 2 - {apiResponse.ip}:{apiResponse.port}
-				</p>
-			</div>
-		</div>
-		<h2>Server MOTD</h2>
-		<div id="motd">
-			{#each apiResponse.motd.html as htmlString}
-				<p style="margin: 0;">{@html htmlString}</p>
-			{/each}
-		</div>
-		<h2>Modpack Details</h2>
-		<p style="margin: 0;">...</p>
-		<h2>Check Again</h2>
-		<p style="margin: 0;">{timePassed}s since last check</p>
-		<p class="angrycheck noselect" on:click={() => promise = doWork()}>CHECK AGAIN!</p>
-		<h2>Server Health</h2>
-		<p style="margin: 0;">You can see the server health via the <a href="???">netdata here</a></p>
+			<h2>ITS DOWN WHAT DO I DO?</h2>
+			<p>
+				Message Jonathan On Discord (Techytechster #0069 - <a
+					href="https://techytechster.com">My Website Contains My Socials</a
+				>)
+			</p>
+			<h2>Server Health</h2>
+			<p style="margin: 0;">
+				You can see the server health via the <a href={NETDATA_URI}
+					>netdata here</a
+				>
+			</p>
+		{/if}
 	{/await}
 </main>
 
