@@ -1,3 +1,3 @@
 # MC Server Webapp
 
-Svelte :)
+Look at https://up.mc.techytechster.com/ to see it deployed
