@@ -1,0 +1,3 @@
+# MC Server Webapp
+
+Svelte :)
